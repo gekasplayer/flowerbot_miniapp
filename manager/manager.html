@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Панель менеджера</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="../client/style.css?v=25">
+    <link rel="stylesheet" href="manager.css?v=1">
+</head>
+
+<body>
+    <div class="header">
+        <h2>Керування наявністю</h2>
+    </div>
+
+    <div class="tabs-container" id="main-tabs-container">
+        <!-- Вкладки генеруються динамічно -->
+    </div>
+
+    <div class="sub-tabs-container" id="sub-tabs-container">
+         <!-- Підвкладки генеруються динамічно -->
+    </div>
+
+    <div class="section active">
+        <div class="products" id="products-grid">
+            <!-- Товари генеруються динамічно -->
+        </div>
+    </div>
+
+    <script src="manager.js?v=1"></script>
+</body>
+
+</html>
