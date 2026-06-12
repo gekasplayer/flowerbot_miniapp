@@ -5,7 +5,7 @@ let productsData = [];
 
 async function fetchProducts() {
     try {
-        let response = await fetch('https://23c3-188-163-31-104.ngrok-free.app/api/manager/products?shop_id=2', {
+        let response = await fetch('https://d82e-188-163-31-104.ngrok-free.app/api/manager/products?shop_id=2', {
             headers: {
                 "ngrok-skip-browser-warning": "69420"
             }
@@ -107,7 +107,7 @@ function renderProducts() {
 
 async function toggleAvailability(productId) {
     try {
-        let response = await fetch(`https://23c3-188-163-31-104.ngrok-free.app/api/manager/products/${productId}/toggle`, {
+        let response = await fetch(`https://d82e-188-163-31-104.ngrok-free.app/api/manager/products/${productId}/toggle`, {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420"
