@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script>
+        // Telegram WebApp passes data in the URL hash or query parameters.
+        // We must preserve them when redirecting to the new 'client' folder.
+        window.location.replace("client/" + window.location.search + window.location.hash);
+    </script>
+</head>
+<body>
+    <p>Перенаправлення на клієнтську версію...</p>
+</body>
+</html>
