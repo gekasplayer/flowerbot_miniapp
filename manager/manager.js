@@ -35,6 +35,7 @@ function generateTabs() {
     compositionCategories.forEach(cat => {
         mainHtml += `<button class="tab-btn" onclick="switchTab('${cat}', this, 'composition')">${cat}</button>`;
     });
+    mainHtml += `<button class="tab-btn" onclick="switchTab('all', this, 'addon')" style="border-color: #e91e63; color: #e91e63;">🧸 Доповнення</button>`;
     mainContainer.innerHTML = mainHtml;
 
     const subContainer = document.getElementById('sub-tabs-container');

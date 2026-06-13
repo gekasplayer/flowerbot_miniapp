@@ -3,6 +3,7 @@ tg.expand();
 
 // 1. ДИНАМІЧНИЙ КАТАЛОГ
 let productsData = [];
+let addonsEnabled = true;
 
 async function fetchProducts() {
     try {
@@ -14,6 +15,7 @@ async function fetchProducts() {
         let result = await response.json();
         if (result.status === 'ok') {
             productsData = result.products;
+            addonsEnabled = result.addons_enabled;
         } else {
             tg.showAlert("Помилка завантаження каталогу: " + result.message);
         }
@@ -39,6 +41,9 @@ function generateTabs() {
         mainHtml += `<button class="tab-btn" onclick="switchTab('${cat}', this)">${cat}</button>`;
     });
     mainHtml += `<button class="tab-btn constructor-tab" onclick="switchTab('constructor', this)">🛠 Зібрати свій</button>`;
+    if (addonsEnabled) {
+        mainHtml += `<button class="tab-btn" onclick="switchTab('addons', this)" style="border-color: #e91e63; color: #e91e63;">🧸 Доповнення</button>`;
+    }
     mainContainer.innerHTML = mainHtml;
 
     // 2. Підвкладки конструктора (Поштучні квіти)
@@ -69,6 +74,10 @@ function switchTab(tabId, element) {
         // За замовчуванням при вході в конструктор показуємо всі квіти
         let firstSubTab = document.querySelector('.sub-tab-btn');
         switchConstructorTab('all', firstSubTab);
+    } else if (tabId === 'addons') {
+        document.getElementById('catalog-section').classList.add('active');
+        let filtered = productsData.filter(p => p.type === 'addon');
+        renderProducts(filtered, 'products-grid', false);
     } else {
         document.getElementById('catalog-section').classList.add('active');
 
@@ -330,7 +339,7 @@ Telegram.WebApp.onEvent("mainButtonClicked", function () {
 
     let payload = {
         cart: [
-            ...Object.values(regularCart).map(item => ({ type: "flower", product_id: item.id, quantity: item.quantity, price: item.price })),
+            ...Object.values(regularCart).map(item => ({ type: item.type, product_id: item.id, quantity: item.quantity, price: item.price })),
             ...payloadCustom
         ]
     };
