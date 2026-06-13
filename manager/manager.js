@@ -1,6 +1,10 @@
 let tg = window.Telegram.WebApp;
 tg.expand();
 
+if (!tg.initData) {
+    tg.showAlert("Увага: initData пуста! Відкривайте панель тільки через Inline-кнопку в Telegram.");
+}
+
 let productsData = [];
 
 async function fetchProducts() {
