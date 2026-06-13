@@ -5,9 +5,10 @@ let productsData = [];
 
 async function fetchProducts() {
     try {
-        let response = await fetch('https://d82e-188-163-31-104.ngrok-free.app/api/manager/products?shop_id=2', {
+        let response = await fetch('https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products?shop_id=2', {
             headers: {
-                "ngrok-skip-browser-warning": "69420"
+                "ngrok-skip-browser-warning": "69420",
+                "Authorization": "tma " + window.Telegram.WebApp.initData
             }
         });
         let result = await response.json();
@@ -99,6 +100,11 @@ function renderProducts() {
                       <span class="slider"></span>
                     </label>
                 </div>
+                
+                <div class="manager-actions">
+                    <button class="action-btn edit-btn" onclick="openEditModal(${p.id})">✏️ Редагувати</button>
+                    <button class="action-btn delete-btn" onclick="deleteProduct(${p.id})">🗑 Видалити</button>
+                </div>
             </div>
         `;
         container.innerHTML += card;
@@ -107,10 +113,11 @@ function renderProducts() {
 
 async function toggleAvailability(productId) {
     try {
-        let response = await fetch(`https://d82e-188-163-31-104.ngrok-free.app/api/manager/products/${productId}/toggle`, {
+        let response = await fetch(`https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products/${productId}/toggle?shop_id=2`, {
             method: 'POST',
             headers: {
-                "ngrok-skip-browser-warning": "69420"
+                "ngrok-skip-browser-warning": "69420",
+                "Authorization": "tma " + window.Telegram.WebApp.initData
             }
         });
         
@@ -157,6 +164,90 @@ function enableHorizontalScroll(selector) {
         });
     });
 }
+
+// === Edit/Delete Functionality ===
+
+let currentEditId = null;
+
+function openEditModal(productId) {
+    let product = productsData.find(p => p.id === productId);
+    if (!product) return;
+    
+    currentEditId = productId;
+    document.getElementById('edit-name').value = product.name;
+    document.getElementById('edit-desc').value = product.description;
+    document.getElementById('edit-price').value = product.price;
+    
+    document.getElementById('edit-modal').style.display = 'block';
+}
+
+function closeEditModal() {
+    document.getElementById('edit-modal').style.display = 'none';
+    currentEditId = null;
+}
+
+async function saveProduct() {
+    if (!currentEditId) return;
+    
+    const name = document.getElementById('edit-name').value;
+    const desc = document.getElementById('edit-desc').value;
+    const price = document.getElementById('edit-price').value;
+    
+    try {
+        let response = await fetch(`https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products/${currentEditId}/update`, {
+            method: 'POST',
+            headers: {
+                "ngrok-skip-browser-warning": "69420",
+                "Authorization": "tma " + window.Telegram.WebApp.initData,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                shop_id: 2,
+                name: name,
+                description: desc,
+                price: price
+            })
+        });
+        let result = await response.json();
+        if (result.status === 'ok') {
+            tg.showAlert("Товар збережено!");
+            closeEditModal();
+            await fetchProducts();
+            renderProducts();
+        } else {
+            tg.showAlert("Помилка: " + result.message);
+        }
+    } catch (e) {
+        tg.showAlert("Не вдалося підключитися до сервера.");
+    }
+}
+
+async function deleteProduct(productId) {
+    tg.showConfirm("Ви впевнені, що хочете назавжди видалити цей товар?", async (confirmed) => {
+        if (!confirmed) return;
+        
+        try {
+            let response = await fetch(`https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products/${productId}?shop_id=2`, {
+                method: 'DELETE',
+                headers: {
+                    "ngrok-skip-browser-warning": "69420",
+                    "Authorization": "tma " + window.Telegram.WebApp.initData
+                }
+            });
+            let result = await response.json();
+            if (result.status === 'ok') {
+                tg.showAlert("Товар видалено!");
+                await fetchProducts();
+                renderProducts();
+            } else {
+                tg.showAlert("Помилка: " + result.message);
+            }
+        } catch (e) {
+            tg.showAlert("Не вдалося підключитися до сервера.");
+        }
+    });
+}
+
 
 window.onload = async () => {
     await fetchProducts();
