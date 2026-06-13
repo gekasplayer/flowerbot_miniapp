@@ -251,10 +251,164 @@ async function deleteProduct(productId) {
         }
     });
 }
+// === Create Product Functionality ===
+let allCategories = [];
 
+async function fetchCategories() {
+    try {
+        let response = await fetch('https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/categories?shop_id=2', {
+            headers: {
+                "ngrok-skip-browser-warning": "69420",
+                "Authorization": "tma " + window.Telegram.WebApp.initData
+            }
+        });
+        let result = await response.json();
+        if (result.status === 'ok') {
+            allCategories = result.categories.map(c => c.name);
+        }
+    } catch (e) {
+        console.error("Помилка завантаження категорій", e);
+    }
+}
+
+function openCreateModal() {
+    document.getElementById('create-name').value = '';
+    document.getElementById('create-desc').value = '';
+    document.getElementById('create-price').value = '';
+    document.getElementById('create-type').value = 'flower';
+    document.getElementById('create-image-file').value = '';
+    document.getElementById('create-image-url').value = '';
+    document.getElementById('upload-status').innerText = '';
+    document.getElementById('new-category-name').value = '';
+    
+    renderCategories();
+    document.getElementById('create-modal').style.display = 'block';
+}
+
+function closeCreateModal() {
+    document.getElementById('create-modal').style.display = 'none';
+}
+
+function renderCategories() {
+    const list = document.getElementById('create-categories-list');
+    list.innerHTML = '';
+    allCategories.forEach(cat => {
+        list.innerHTML += `
+            <label class="cat-checkbox">
+                <input type="checkbox" value="${cat}" class="create-cat-chk"> ${cat}
+            </label>
+        `;
+    });
+}
+
+function addNewCategoryCheckbox() {
+    const input = document.getElementById('new-category-name');
+    const cat = input.value.trim();
+    if (!cat) return;
+    
+    if (!allCategories.includes(cat)) {
+        allCategories.push(cat);
+        const list = document.getElementById('create-categories-list');
+        list.innerHTML += `
+            <label class="cat-checkbox">
+                <input type="checkbox" value="${cat}" class="create-cat-chk" checked> ${cat}
+            </label>
+        `;
+    }
+    input.value = '';
+}
+
+async function uploadImage(input) {
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    const statusDiv = document.getElementById('upload-status');
+    const urlInput = document.getElementById('create-image-url');
+    
+    statusDiv.innerText = '⏳ Завантаження на Telegraph...';
+    statusDiv.style.color = '#ff9800';
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        let response = await fetch('https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/upload_image?shop_id=2', {
+            method: 'POST',
+            headers: {
+                "ngrok-skip-browser-warning": "69420",
+                "Authorization": "tma " + window.Telegram.WebApp.initData
+            },
+            body: formData
+        });
+        let result = await response.json();
+        if (result.status === 'ok') {
+            statusDiv.innerText = '✅ Фото завантажено!';
+            statusDiv.style.color = '#4CAF50';
+            urlInput.value = result.url;
+        } else {
+            statusDiv.innerText = '❌ Помилка: ' + result.message;
+            statusDiv.style.color = '#f44336';
+        }
+    } catch (e) {
+        statusDiv.innerText = '❌ Помилка з\'єднання';
+        statusDiv.style.color = '#f44336';
+    }
+}
+
+async function submitNewProduct() {
+    const name = document.getElementById('create-name').value.trim();
+    const desc = document.getElementById('create-desc').value.trim();
+    const price = document.getElementById('create-price').value;
+    const type = document.getElementById('create-type').value;
+    const imageUrl = document.getElementById('create-image-url').value.trim();
+    
+    if (!name || !price) {
+        tg.showAlert("Будь ласка, вкажіть назву та ціну!");
+        return;
+    }
+    
+    const checkboxes = document.querySelectorAll('.create-cat-chk');
+    const selectedCategories = [];
+    checkboxes.forEach(chk => {
+        if (chk.checked) selectedCategories.push(chk.value);
+    });
+    
+    try {
+        let response = await fetch('https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products', {
+            method: 'POST',
+            headers: {
+                "ngrok-skip-browser-warning": "69420",
+                "Authorization": "tma " + window.Telegram.WebApp.initData,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                shop_id: 2,
+                name: name,
+                description: desc,
+                price: price,
+                type: type,
+                image: imageUrl,
+                categories: selectedCategories
+            })
+        });
+        let result = await response.json();
+        if (result.status === 'ok') {
+            tg.showAlert("Товар успішно створено!");
+            closeCreateModal();
+            await fetchProducts();
+            generateTabs();
+            let firstTab = document.querySelector('.tab-btn');
+            switchTab('all', firstTab, 'composition');
+        } else {
+            tg.showAlert("Помилка: " + result.message);
+        }
+    } catch (e) {
+        tg.showAlert("Не вдалося підключитися до сервера.");
+    }
+}
 
 window.onload = async () => {
     await fetchProducts();
+    await fetchCategories();
     generateTabs();
     
     // Show composition all initially
