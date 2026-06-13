@@ -6,6 +6,7 @@ if (!tg.initData) {
 }
 
 let productsData = [];
+let addonsEnabled = true;
 
 async function fetchProducts() {
     try {
@@ -18,6 +19,7 @@ async function fetchProducts() {
         let result = await response.json();
         if (result.status === 'ok') {
             productsData = result.products;
+            addonsEnabled = result.addons_enabled;
         } else {
             tg.showAlert("Помилка завантаження каталогу: " + result.message);
         }
@@ -35,7 +37,9 @@ function generateTabs() {
     compositionCategories.forEach(cat => {
         mainHtml += `<button class="tab-btn" onclick="switchTab('${cat}', this, 'composition')">${cat}</button>`;
     });
-    mainHtml += `<button class="tab-btn" onclick="switchTab('all', this, 'addon')" style="border-color: #e91e63; color: #e91e63;">🧸 Доповнення</button>`;
+    if (addonsEnabled) {
+        mainHtml += `<button class="tab-btn" onclick="switchTab('all', this, 'addon')" style="border-color: #e91e63; color: #e91e63;">🧸 Доповнення</button>`;
+    }
     mainContainer.innerHTML = mainHtml;
 
     const subContainer = document.getElementById('sub-tabs-container');
@@ -416,6 +420,11 @@ window.onload = async () => {
     await fetchProducts();
     await fetchCategories();
     generateTabs();
+    
+    if (!addonsEnabled) {
+        const optAddon = document.getElementById('opt-addon');
+        if (optAddon) optAddon.remove();
+    }
     
     // Show composition all initially
     let firstTab = document.querySelector('.tab-btn');

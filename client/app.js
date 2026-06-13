@@ -77,7 +77,13 @@ function switchTab(tabId, element) {
     } else if (tabId === 'addons') {
         document.getElementById('catalog-section').classList.add('active');
         let filtered = productsData.filter(p => p.type === 'addon');
-        renderProducts(filtered, 'products-grid', false);
+        
+        if (filtered.length === 0) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '<p style="width: 100%; text-align: center; color: #888; font-size: 14px; margin-top: 20px;">Доповнення ще не додані в асортимент.</p>';
+        } else {
+            renderProducts(filtered, 'products-grid', false);
+        }
     } else {
         document.getElementById('catalog-section').classList.add('active');
 
