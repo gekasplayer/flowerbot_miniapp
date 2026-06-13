@@ -40,7 +40,7 @@ function generateTabs() {
     const subContainer = document.getElementById('sub-tabs-container');
     const flowerCategories = [...new Set(productsData.filter(p => p.type === 'flower').flatMap(p => p.categories))];
     
-    let subHtml = `<button class="sub-tab-btn active" onclick="switchTab('all', this, 'flower')">Всі квіти (Поштучно)</button>`;
+    let subHtml = `<button class="sub-tab-btn active" onclick="switchTab('all', this, 'flower')">Всі поштучні квіти</button>`;
     flowerCategories.forEach(cat => {
         subHtml += `<button class="sub-tab-btn" onclick="switchTab('${cat}', this, 'flower')">${cat}</button>`;
     });
@@ -181,6 +181,9 @@ function openEditModal(productId) {
     document.getElementById('edit-name').value = product.name;
     document.getElementById('edit-desc').value = product.description;
     document.getElementById('edit-price').value = product.price;
+    document.getElementById('edit-image-file').value = '';
+    document.getElementById('edit-image-url').value = product.image || '';
+    document.getElementById('edit-upload-status').innerText = '';
     
     document.getElementById('edit-modal').style.display = 'block';
 }
@@ -196,6 +199,7 @@ async function saveProduct() {
     const name = document.getElementById('edit-name').value;
     const desc = document.getElementById('edit-desc').value;
     const price = document.getElementById('edit-price').value;
+    const imageUrl = document.getElementById('edit-image-url').value;
     
     try {
         let response = await fetch(`https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products/${currentEditId}/update`, {
@@ -209,7 +213,8 @@ async function saveProduct() {
                 shop_id: 2,
                 name: name,
                 description: desc,
-                price: price
+                price: price,
+                image: imageUrl
             })
         });
         let result = await response.json();
@@ -318,11 +323,11 @@ function addNewCategoryCheckbox() {
     input.value = '';
 }
 
-async function uploadImage(input) {
+async function uploadImage(input, statusId, urlId) {
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
-    const statusDiv = document.getElementById('upload-status');
-    const urlInput = document.getElementById('create-image-url');
+    const statusDiv = document.getElementById(statusId);
+    const urlInput = document.getElementById(urlId);
     
     statusDiv.innerText = '⏳ Завантаження фото на сервер...';
     statusDiv.style.color = '#ff9800';

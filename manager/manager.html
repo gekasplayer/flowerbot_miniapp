@@ -51,6 +51,12 @@
                 <label>Ціна (грн)</label>
                 <input type="number" id="edit-price">
             </div>
+            <div class="form-group">
+                <label>Фотографія</label>
+                <input type="file" id="edit-image-file" accept="image/*" onchange="uploadImage(this, 'edit-upload-status', 'edit-image-url')">
+                <div id="edit-upload-status" style="font-size: 12px; color: #666; margin-top: 5px;"></div>
+                <input type="text" id="edit-image-url" placeholder="Або вставте готовий URL" style="margin-top: 5px;">
+            </div>
             <button class="save-btn" onclick="saveProduct()">Зберегти</button>
         </div>
     </div>
@@ -75,13 +81,13 @@
             <div class="form-group">
                 <label>Тип</label>
                 <select id="create-type">
-                    <option value="flower">Поштучна квітка</option>
-                    <option value="composition">Букет / Композиція</option>
+                    <option value="flower">Поштучні квіти</option>
+                    <option value="composition">Букет / Композиція / Інше</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Фотографія</label>
-                <input type="file" id="create-image-file" accept="image/*" onchange="uploadImage(this)">
+                <input type="file" id="create-image-file" accept="image/*" onchange="uploadImage(this, 'upload-status', 'create-image-url')">
                 <div id="upload-status" style="font-size: 12px; color: #666; margin-top: 5px;"></div>
                 <input type="text" id="create-image-url" placeholder="Або вставте готовий URL" style="margin-top: 5px;">
             </div>
@@ -99,7 +105,7 @@
         </div>
     </div>
 
-    <script src="manager.js?v=4"></script>
+    <script src="manager.js?v=5"></script>
 </body>
 
 </html>
