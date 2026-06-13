@@ -324,7 +324,7 @@ async function uploadImage(input) {
     const statusDiv = document.getElementById('upload-status');
     const urlInput = document.getElementById('create-image-url');
     
-    statusDiv.innerText = '⏳ Завантаження на Telegraph...';
+    statusDiv.innerText = '⏳ Завантаження фото на сервер...';
     statusDiv.style.color = '#ff9800';
     
     const formData = new FormData();
