@@ -10,7 +10,7 @@ let addonsEnabled = true;
 
 async function fetchProducts() {
     try {
-        let response = await fetch('https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products?shop_id=2', {
+        let response = await fetch('https://c1ba-188-163-31-104.ngrok-free.app/api/manager/products?shop_id=2', {
             headers: {
                 "ngrok-skip-browser-warning": "69420",
                 "Authorization": "tma " + window.Telegram.WebApp.initData
@@ -122,7 +122,7 @@ function renderProducts() {
 
 async function toggleAvailability(productId) {
     try {
-        let response = await fetch(`https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products/${productId}/toggle?shop_id=2`, {
+        let response = await fetch(`https://c1ba-188-163-31-104.ngrok-free.app/api/manager/products/${productId}/toggle?shop_id=2`, {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
@@ -207,7 +207,7 @@ async function saveProduct() {
     const imageUrl = document.getElementById('edit-image-url').value;
     
     try {
-        let response = await fetch(`https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products/${currentEditId}/update`, {
+        let response = await fetch(`https://c1ba-188-163-31-104.ngrok-free.app/api/manager/products/${currentEditId}/update`, {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
@@ -241,7 +241,7 @@ async function deleteProduct(productId) {
         if (!confirmed) return;
         
         try {
-            let response = await fetch(`https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products/${productId}?shop_id=2`, {
+            let response = await fetch(`https://c1ba-188-163-31-104.ngrok-free.app/api/manager/products/${productId}?shop_id=2`, {
                 method: 'DELETE',
                 headers: {
                     "ngrok-skip-browser-warning": "69420",
@@ -266,7 +266,7 @@ let allCategories = [];
 
 async function fetchCategories() {
     try {
-        let response = await fetch('https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/categories?shop_id=2', {
+        let response = await fetch('https://c1ba-188-163-31-104.ngrok-free.app/api/manager/categories?shop_id=2', {
             headers: {
                 "ngrok-skip-browser-warning": "69420",
                 "Authorization": "tma " + window.Telegram.WebApp.initData
@@ -341,7 +341,7 @@ async function uploadImage(input, statusId, urlId) {
     formData.append('file', file);
     
     try {
-        let response = await fetch('https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/upload_image?shop_id=2', {
+        let response = await fetch('https://c1ba-188-163-31-104.ngrok-free.app/api/manager/upload_image?shop_id=2', {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
@@ -383,7 +383,7 @@ async function submitNewProduct() {
     });
     
     try {
-        let response = await fetch('https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/manager/products', {
+        let response = await fetch('https://c1ba-188-163-31-104.ngrok-free.app/api/manager/products', {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",

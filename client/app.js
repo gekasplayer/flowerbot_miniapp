@@ -7,7 +7,7 @@ let addonsEnabled = true;
 
 async function fetchProducts() {
     try {
-        let response = await fetch('https://03e1-2a02-2378-1029-abeb-7908-d66-d096-87a4.ngrok-free.app/api/products?shop_id=2', {
+        let response = await fetch('https://c1ba-188-163-31-104.ngrok-free.app/api/products?shop_id=2', {
             headers: {
                 "ngrok-skip-browser-warning": "69420"
             }
