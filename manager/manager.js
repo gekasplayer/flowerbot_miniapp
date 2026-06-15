@@ -8,6 +8,23 @@ function getImageUrl(url) {
     return url.startsWith('/uploads/') ? BASE_URL + url : url;
 }
 
+window.loadNgrokImage = function(el) {
+    if (el.dataset.loaded) return;
+    el.dataset.loaded = 'true';
+    let url = el.getAttribute('data-ngrok-src');
+    if (!url) return;
+    
+    if (!url.includes('ngrok-free.app')) {
+        el.src = url;
+        return;
+    }
+    
+    fetch(url, { headers: {"ngrok-skip-browser-warning": "69420"} })
+        .then(r => r.blob())
+        .then(b => { el.src = URL.createObjectURL(b); })
+        .catch(e => { el.src = url; });
+};
+
 if (!tg.initData) {
     tg.showAlert("Увага: initData пуста! Відкривайте панель тільки через Inline-кнопку в Telegram.");
 }
@@ -107,7 +124,7 @@ function renderProducts() {
 
         const card = `
             <div class="item ${disabledClass}" id="product-card-${p.id}">
-                <img src="${getImageUrl(p.image)}" alt="${p.name}">
+                <img data-ngrok-src="${getImageUrl(p.image)}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" onload="window.loadNgrokImage(this)" alt="${p.name}">
                 <h3 style="margin: 5px 0 2px 0; font-size: 16px;">${p.name}</h3>
                 ${descHtml}
                 <p style="margin: 0 0 10px 0; font-weight: bold;">${p.price} грн</p>
