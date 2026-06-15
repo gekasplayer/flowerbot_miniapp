@@ -8,9 +8,12 @@ if (!tg.initData) {
 let productsData = [];
 let addonsEnabled = true;
 
+const urlParams = new URLSearchParams(window.location.search);
+const shopId = urlParams.get('shop_id');
+
 async function fetchProducts() {
     try {
-        let response = await fetch('https://c1ba-188-163-31-104.ngrok-free.app/api/manager/products?shop_id=2', {
+        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/products?shop_id=${shopId}`, {
             headers: {
                 "ngrok-skip-browser-warning": "69420",
                 "Authorization": "tma " + window.Telegram.WebApp.initData
@@ -122,7 +125,7 @@ function renderProducts() {
 
 async function toggleAvailability(productId) {
     try {
-        let response = await fetch(`https://c1ba-188-163-31-104.ngrok-free.app/api/manager/products/${productId}/toggle?shop_id=2`, {
+        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/products/${productId}/toggle?shop_id=${shopId}`, {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
@@ -207,7 +210,7 @@ async function saveProduct() {
     const imageUrl = document.getElementById('edit-image-url').value;
     
     try {
-        let response = await fetch(`https://c1ba-188-163-31-104.ngrok-free.app/api/manager/products/${currentEditId}/update`, {
+        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/products/${currentEditId}/update`, {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
@@ -215,7 +218,7 @@ async function saveProduct() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                shop_id: 2,
+                shop_id: parseInt(shopId),
                 name: name,
                 description: desc,
                 price: price,
@@ -241,7 +244,7 @@ async function deleteProduct(productId) {
         if (!confirmed) return;
         
         try {
-            let response = await fetch(`https://c1ba-188-163-31-104.ngrok-free.app/api/manager/products/${productId}?shop_id=2`, {
+            let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/products/${productId}?shop_id=${shopId}`, {
                 method: 'DELETE',
                 headers: {
                     "ngrok-skip-browser-warning": "69420",
@@ -266,7 +269,7 @@ let allCategories = [];
 
 async function fetchCategories() {
     try {
-        let response = await fetch('https://c1ba-188-163-31-104.ngrok-free.app/api/manager/categories?shop_id=2', {
+        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/categories?shop_id=${shopId}`, {
             headers: {
                 "ngrok-skip-browser-warning": "69420",
                 "Authorization": "tma " + window.Telegram.WebApp.initData
@@ -341,7 +344,7 @@ async function uploadImage(input, statusId, urlId) {
     formData.append('file', file);
     
     try {
-        let response = await fetch('https://c1ba-188-163-31-104.ngrok-free.app/api/manager/upload_image?shop_id=2', {
+        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/upload_image?shop_id=${shopId}`, {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
@@ -383,7 +386,7 @@ async function submitNewProduct() {
     });
     
     try {
-        let response = await fetch('https://c1ba-188-163-31-104.ngrok-free.app/api/manager/products', {
+        let response = await fetch('https://38d4-188-163-31-104.ngrok-free.app/api/manager/products', {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
@@ -391,7 +394,7 @@ async function submitNewProduct() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                shop_id: 2,
+                shop_id: parseInt(shopId),
                 name: name,
                 description: desc,
                 price: price,
