@@ -1,6 +1,13 @@
 let tg = window.Telegram.WebApp;
 tg.expand();
 
+const BASE_URL = 'https://38d4-188-163-31-104.ngrok-free.app';
+
+function getImageUrl(url) {
+    if (!url) return '';
+    return url.startsWith('/uploads/') ? BASE_URL + url : url;
+}
+
 // 1. ДИНАМІЧНИЙ КАТАЛОГ
 let productsData = [];
 let addonsEnabled = true;
@@ -9,7 +16,7 @@ async function fetchProducts() {
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const shopId = urlParams.get('shop_id');
-        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/products?shop_id=${shopId}`, {
+        let response = await fetch(`${BASE_URL}/api/products?shop_id=${shopId}`, {
             headers: {
                 "ngrok-skip-browser-warning": "69420"
             }
@@ -138,7 +145,7 @@ function renderProducts(products, containerId, isConstructor) {
         // Зверни увагу, що я додав descHtml сюди
         const card = `
             <div class="item">
-                <img src="${p.image}" alt="${p.name}">
+                <img src="${getImageUrl(p.image)}" alt="${p.name}">
                 <h3 style="margin: 5px 0 2px 0; font-size: 16px;">${p.name}</h3>
                 ${descHtml}
                 <p style="margin: 0 0 10px 0; color: var(--tg-theme-text-color, #000); font-weight: bold;">${p.price} грн</p>

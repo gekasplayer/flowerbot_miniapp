@@ -1,6 +1,13 @@
 let tg = window.Telegram.WebApp;
 tg.expand();
 
+const BASE_URL = 'https://38d4-188-163-31-104.ngrok-free.app';
+
+function getImageUrl(url) {
+    if (!url) return '';
+    return url.startsWith('/uploads/') ? BASE_URL + url : url;
+}
+
 if (!tg.initData) {
     tg.showAlert("Увага: initData пуста! Відкривайте панель тільки через Inline-кнопку в Telegram.");
 }
@@ -13,7 +20,7 @@ const shopId = urlParams.get('shop_id');
 
 async function fetchProducts() {
     try {
-        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/products?shop_id=${shopId}`, {
+        let response = await fetch(`${BASE_URL}/api/manager/products?shop_id=${shopId}`, {
             headers: {
                 "ngrok-skip-browser-warning": "69420",
                 "Authorization": "tma " + window.Telegram.WebApp.initData
@@ -100,7 +107,7 @@ function renderProducts() {
 
         const card = `
             <div class="item ${disabledClass}" id="product-card-${p.id}">
-                <img src="${p.image}" alt="${p.name}">
+                <img src="${getImageUrl(p.image)}" alt="${p.name}">
                 <h3 style="margin: 5px 0 2px 0; font-size: 16px;">${p.name}</h3>
                 ${descHtml}
                 <p style="margin: 0 0 10px 0; font-weight: bold;">${p.price} грн</p>
@@ -125,7 +132,7 @@ function renderProducts() {
 
 async function toggleAvailability(productId) {
     try {
-        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/products/${productId}/toggle?shop_id=${shopId}`, {
+        let response = await fetch(`${BASE_URL}/api/manager/products/${productId}/toggle?shop_id=${shopId}`, {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
@@ -210,7 +217,7 @@ async function saveProduct() {
     const imageUrl = document.getElementById('edit-image-url').value;
     
     try {
-        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/products/${currentEditId}/update`, {
+        let response = await fetch(`${BASE_URL}/api/manager/products/${currentEditId}/update`, {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
@@ -244,7 +251,7 @@ async function deleteProduct(productId) {
         if (!confirmed) return;
         
         try {
-            let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/products/${productId}?shop_id=${shopId}`, {
+            let response = await fetch(`${BASE_URL}/api/manager/products/${productId}?shop_id=${shopId}`, {
                 method: 'DELETE',
                 headers: {
                     "ngrok-skip-browser-warning": "69420",
@@ -269,7 +276,7 @@ let allCategories = [];
 
 async function fetchCategories() {
     try {
-        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/categories?shop_id=${shopId}`, {
+        let response = await fetch(`${BASE_URL}/api/manager/categories?shop_id=${shopId}`, {
             headers: {
                 "ngrok-skip-browser-warning": "69420",
                 "Authorization": "tma " + window.Telegram.WebApp.initData
@@ -344,7 +351,7 @@ async function uploadImage(input, statusId, urlId) {
     formData.append('file', file);
     
     try {
-        let response = await fetch(`https://38d4-188-163-31-104.ngrok-free.app/api/manager/upload_image?shop_id=${shopId}`, {
+        let response = await fetch(`${BASE_URL}/api/manager/upload_image?shop_id=${shopId}`, {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
@@ -386,7 +393,7 @@ async function submitNewProduct() {
     });
     
     try {
-        let response = await fetch('https://38d4-188-163-31-104.ngrok-free.app/api/manager/products', {
+        let response = await fetch(`${BASE_URL}/api/manager/products`, {
             method: 'POST',
             headers: {
                 "ngrok-skip-browser-warning": "69420",
