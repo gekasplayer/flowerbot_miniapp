@@ -20,6 +20,16 @@ body {
 /* Ховаємо повзунок скролу */
 .tabs-container::-webkit-scrollbar { display: none; }
 
+.scroll-hint {
+    font-size: 11px;
+    color: var(--tg-theme-hint-color, #999);
+    text-align: right;
+    padding: 0 15px 10px 15px;
+    margin-top: -5px;
+    font-style: italic;
+    opacity: 0.8;
+}
+
 .tab-btn {
     background: transparent;
     border: 1px solid var(--tg-theme-hint-color, #999);
@@ -142,6 +152,11 @@ textarea {
     margin-bottom: 15px;
 }
 .sub-tabs-container::-webkit-scrollbar { display: none; }
+
+.sub-scroll-hint {
+    margin-top: -10px;
+    padding-bottom: 5px;
+}
 
 .sub-tab-btn {
     background-color: var(--tg-theme-secondary-bg-color, #e0e0e0);
