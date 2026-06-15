@@ -161,12 +161,12 @@ function renderProducts(products, containerId, isConstructor) {
 
         // Зверни увагу, що я додав descHtml сюди
         const card = `
-            <div class="item">
+            <div class="item" onclick="openProductModal(${p.id}, ${isConstructor})">
                 <img data-ngrok-src="${getImageUrl(p.image)}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" onload="window.loadNgrokImage(this)" alt="${p.name}">
                 <h3 style="margin: 5px 0 2px 0; font-size: 16px;">${p.name}</h3>
                 ${descHtml}
                 <p style="margin: 0 0 10px 0; color: var(--tg-theme-text-color, #000); font-weight: bold;">${p.price} грн</p>
-                <div class="controls">
+                <div class="controls" onclick="event.stopPropagation()">
                     <button class="btn-calc" onclick="changeQty(${p.id}, -1, ${isConstructor})">-</button>
                     <span id="qty-${isConstructor ? 'const-' : ''}${p.id}" class="qty-text">${currentQty}</span>
                     <button class="btn-calc" onclick="changeQty(${p.id}, 1, ${isConstructor})">+</button>
@@ -243,6 +243,49 @@ function toggleCart() {
     if (modal.classList.contains('active')) {
         renderCartModal();
     }
+}
+
+// ==========================================
+// 6.5 МОДАЛЬНЕ ВІКНО ДЕТАЛЕЙ ТОВАРУ
+// ==========================================
+function openProductModal(id, isConstructor) {
+    let p = productsData.find(prod => prod.id === id);
+    if (!p) return;
+    
+    let imgEl = document.getElementById('pm-image');
+    imgEl.setAttribute('data-ngrok-src', getImageUrl(p.image));
+    imgEl.src = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+    imgEl.dataset.loaded = '';
+    window.loadNgrokImage(imgEl);
+    
+    document.getElementById('pm-title').innerText = p.name;
+    document.getElementById('pm-desc').innerText = p.description || '';
+    document.getElementById('pm-price').innerText = p.price + ' грн';
+    
+    let currentQty = 0;
+    if (isConstructor && constructorCart[id]) currentQty = constructorCart[id].quantity;
+    if (!isConstructor && regularCart[id]) currentQty = regularCart[id].quantity;
+    
+    let controlsHtml = `
+        <button class="btn-calc" onclick="changeQty(${p.id}, -1, ${isConstructor}); syncModalQty(${p.id}, ${isConstructor})">-</button>
+        <span id="pm-qty" class="qty-text">${currentQty}</span>
+        <button class="btn-calc" onclick="changeQty(${p.id}, 1, ${isConstructor}); syncModalQty(${p.id}, ${isConstructor})">+</button>
+    `;
+    document.getElementById('pm-controls').innerHTML = controlsHtml;
+    
+    document.getElementById('product-modal').classList.add('active');
+}
+
+function syncModalQty(id, isConstructor) {
+    let currentQty = 0;
+    if (isConstructor && constructorCart[id]) currentQty = constructorCart[id].quantity;
+    if (!isConstructor && regularCart[id]) currentQty = regularCart[id].quantity;
+    let pmQty = document.getElementById('pm-qty');
+    if (pmQty) pmQty.innerText = currentQty;
+}
+
+function closeProductModal() {
+    document.getElementById('product-modal').classList.remove('active');
 }
 
 function updateGlobalCartState() {

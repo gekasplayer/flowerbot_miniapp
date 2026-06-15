@@ -231,3 +231,71 @@ textarea {
     transform: scale(0.9);
     background-color: rgba(255, 59, 48, 0.1);
 }
+
+/* Модальне вікно деталей товару */
+.product-modal-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh; /* Висота модалки на 90% екрану */
+}
+
+.product-modal-content .close-btn {
+    top: 10px;
+    right: 15px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    z-index: 10;
+}
+
+#pm-image {
+    width: 100%;
+    max-height: 40vh;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+    flex-shrink: 0;
+}
+
+#pm-title {
+    margin: 15px 20px 5px 20px;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+#pm-desc-container {
+    padding: 0 20px;
+    overflow-y: auto; /* Скрол тільки для опису */
+    flex-grow: 1;     /* Займає вільний простір */
+    margin-bottom: 15px;
+}
+
+.pm-description {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color, #666);
+    line-height: 1.5;
+    white-space: pre-wrap; /* Зберігає перенесення рядків */
+    margin: 0;
+}
+
+.pm-footer {
+    padding: 15px 20px;
+    border-top: 1px solid var(--tg-theme-secondary-bg-color, #eee);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    background-color: var(--tg-theme-bg-color, #fff);
+}
+
+.pm-price {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--tg-theme-text-color, #000);
+}

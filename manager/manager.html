@@ -106,7 +106,22 @@
         </div>
     </div>
 
-    <script src="manager.js?v=12"></script>
+    <!-- Модальне вікно деталей товару -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content product-modal-content">
+            <span class="close-btn" onclick="closeProductModal()">&times;</span>
+            <img id="pm-image" src="" alt="Product Image">
+            <h2 id="pm-title"></h2>
+            <div id="pm-desc-container">
+                <p id="pm-desc" class="pm-description"></p>
+            </div>
+            <div class="pm-footer">
+                <span id="pm-price" class="pm-price"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="manager.js?v=13"></script>
 </body>
 
 </html>

@@ -123,13 +123,13 @@ function renderProducts() {
         const descHtml = p.description ? `<p class="item-description">${p.description}</p>` : '';
 
         const card = `
-            <div class="item ${disabledClass}" id="product-card-${p.id}">
+            <div class="item ${disabledClass}" id="product-card-${p.id}" onclick="openProductModal(${p.id})">
                 <img data-ngrok-src="${getImageUrl(p.image)}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" onload="window.loadNgrokImage(this)" alt="${p.name}">
                 <h3 style="margin: 5px 0 2px 0; font-size: 16px;">${p.name}</h3>
                 ${descHtml}
                 <p style="margin: 0 0 10px 0; font-weight: bold;">${p.price} грн</p>
                 
-                <div class="toggle-container">
+                <div class="toggle-container" onclick="event.stopPropagation()">
                     <span class="toggle-label" id="status-text-${p.id}" style="color: ${statusColor}">${statusText}</span>
                     <label class="switch">
                       <input type="checkbox" onchange="toggleAvailability(${p.id})" ${checkedAttr}>
@@ -137,7 +137,7 @@ function renderProducts() {
                     </label>
                 </div>
                 
-                <div class="manager-actions">
+                <div class="manager-actions" onclick="event.stopPropagation()">
                     <button class="action-btn edit-btn" onclick="openEditModal(${p.id})">✏️ Редагувати</button>
                     <button class="action-btn delete-btn" onclick="deleteProduct(${p.id})">🗑 Видалити</button>
                 </div>
@@ -199,6 +199,28 @@ function enableHorizontalScroll(selector) {
             container.scrollLeft += evt.deltaY;
         });
     });
+}
+
+// === Product Details Modal ===
+function openProductModal(id) {
+    let p = productsData.find(prod => prod.id === id);
+    if (!p) return;
+    
+    let imgEl = document.getElementById('pm-image');
+    imgEl.setAttribute('data-ngrok-src', getImageUrl(p.image));
+    imgEl.src = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+    imgEl.dataset.loaded = '';
+    window.loadNgrokImage(imgEl);
+    
+    document.getElementById('pm-title').innerText = p.name;
+    document.getElementById('pm-desc').innerText = p.description || '';
+    document.getElementById('pm-price').innerText = p.price + ' грн';
+    
+    document.getElementById('product-modal').classList.add('active');
+}
+
+function closeProductModal() {
+    document.getElementById('product-modal').classList.remove('active');
 }
 
 // === Edit/Delete Functionality ===
