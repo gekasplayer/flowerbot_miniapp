@@ -1,7 +1,7 @@
 let tg = window.Telegram.WebApp;
 tg.expand();
 
-const BASE_URL = 'https://3cbd-188-163-31-104.ngrok-free.app';
+const BASE_URL = 'https://4590-188-163-31-104.ngrok-free.app';
 
 function getImageUrl(url) {
     if (!url) return '';
