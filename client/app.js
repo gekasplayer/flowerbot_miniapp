@@ -1,29 +1,14 @@
 let tg = window.Telegram.WebApp;
 tg.expand();
 
-const BASE_URL = 'https://4590-188-163-31-104.ngrok-free.app';
+// Зчитуємо shop_id (визначає з якого магазину тягнути дані)
+const urlParams = new URLSearchParams(window.location.search);
+const shopId = urlParams.get('shop_id') || window.Telegram.WebApp.initDataUnsafe?.start_param || '1';
 
 function getImageUrl(url) {
     if (!url) return '';
-    return url.startsWith('/uploads/') ? BASE_URL + url : url;
+    return url; // Відносний шлях (наприклад, /uploads/shop_1/image.jpg), який Nginx відправить куди треба
 }
-
-window.loadNgrokImage = function(el) {
-    if (el.dataset.loaded) return;
-    el.dataset.loaded = 'true';
-    let url = el.getAttribute('data-ngrok-src');
-    if (!url) return;
-    
-    if (!url.includes('ngrok-free.app')) {
-        el.src = url;
-        return;
-    }
-    
-    fetch(url, { headers: {"ngrok-skip-browser-warning": "69420"} })
-        .then(r => r.blob())
-        .then(b => { el.src = URL.createObjectURL(b); })
-        .catch(e => { el.src = url; });
-};
 
 // 1. ДИНАМІЧНИЙ КАТАЛОГ
 let productsData = [];
@@ -31,13 +16,7 @@ let addonsEnabled = true;
 
 async function fetchProducts() {
     try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const shopId = urlParams.get('shop_id');
-        let response = await fetch(`${BASE_URL}/api/products?shop_id=${shopId}`, {
-            headers: {
-                "ngrok-skip-browser-warning": "69420"
-            }
-        });
+        let response = await fetch(`/api/${shopId}/products?shop_id=${shopId}`);
         let result = await response.json();
         if (result.status === 'ok') {
             productsData = result.products;
@@ -162,7 +141,7 @@ function renderProducts(products, containerId, isConstructor) {
         // Зверни увагу, що я додав descHtml сюди
         const card = `
             <div class="item" onclick="openProductModal(${p.id}, ${isConstructor})">
-                <img data-ngrok-src="${getImageUrl(p.image)}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" onload="window.loadNgrokImage(this)" alt="${p.name}">
+                <img src="${getImageUrl(p.image)}" alt="${p.name}">
                 <h3 style="margin: 5px 0 2px 0; font-size: 16px;">${p.name}</h3>
                 ${descHtml}
                 <p style="margin: 0 0 10px 0; color: var(--tg-theme-text-color, #000); font-weight: bold;">${p.price} грн</p>
@@ -253,10 +232,7 @@ function openProductModal(id, isConstructor) {
     if (!p) return;
     
     let imgEl = document.getElementById('pm-image');
-    imgEl.setAttribute('data-ngrok-src', getImageUrl(p.image));
-    imgEl.src = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
-    imgEl.dataset.loaded = '';
-    window.loadNgrokImage(imgEl);
+    imgEl.src = getImageUrl(p.image);
     
     document.getElementById('pm-title').innerText = p.name;
     document.getElementById('pm-desc').innerText = p.description || '';
