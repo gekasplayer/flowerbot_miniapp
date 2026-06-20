@@ -1,9 +1,10 @@
 let tg = window.Telegram.WebApp;
 tg.expand();
 
-// Зчитуємо shop_id (визначає з якого магазину тягнути дані)
+// Зчитуємо параметри
 const urlParams = new URLSearchParams(window.location.search);
 const shopId = urlParams.get('shop_id') || window.Telegram.WebApp.initDataUnsafe?.start_param || '1';
+const botId = urlParams.get('bot_id') || '1'; // Для маршрутизації Nginx
 
 function getImageUrl(url) {
     if (!url) return '';
@@ -16,7 +17,7 @@ let addonsEnabled = true;
 
 async function fetchProducts() {
     try {
-        let response = await fetch(`/api/${shopId}/products?shop_id=${shopId}`);
+        let response = await fetch(`/api/${botId}/products?shop_id=${shopId}`);
         let result = await response.json();
         if (result.status === 'ok') {
             productsData = result.products;

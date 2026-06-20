@@ -14,11 +14,12 @@ let productsData = [];
 let addonsEnabled = true;
 
 const urlParams = new URLSearchParams(window.location.search);
-const shopId = urlParams.get('shop_id');
+const shopId = urlParams.get('shop_id') || '1';
+const botId = urlParams.get('bot_id') || '1';
 
 async function fetchProducts() {
     try {
-        let response = await fetch(`/api/${shopId}/manager/products?shop_id=${shopId}`, {
+        let response = await fetch(`/api/${botId}/manager/products?shop_id=${shopId}`, {
             headers: {
                 "Authorization": "tma " + window.Telegram.WebApp.initData
             }
@@ -129,7 +130,7 @@ function renderProducts() {
 
 async function toggleAvailability(productId) {
     try {
-        let response = await fetch(`/api/${shopId}/manager/products/${productId}/toggle?shop_id=${shopId}`, {
+        let response = await fetch(`/api/${botId}/manager/products/${productId}/toggle?shop_id=${shopId}`, {
             method: 'POST',
             headers: {
                 "Authorization": "tma " + window.Telegram.WebApp.initData
@@ -232,7 +233,7 @@ async function saveProduct() {
     const imageUrl = document.getElementById('edit-image-url').value;
     
     try {
-        let response = await fetch(`/api/${shopId}/manager/products/${currentEditId}/update`, {
+        let response = await fetch(`/api/${botId}/manager/products/${currentEditId}/update`, {
             method: 'POST',
             headers: {
                 "Authorization": "tma " + window.Telegram.WebApp.initData,
@@ -265,7 +266,7 @@ async function deleteProduct(productId) {
         if (!confirmed) return;
         
         try {
-            let response = await fetch(`/api/${shopId}/manager/products/${productId}?shop_id=${shopId}`, {
+            let response = await fetch(`/api/${botId}/manager/products/${productId}?shop_id=${shopId}`, {
                 method: 'DELETE',
                 headers: {
                     "Authorization": "tma " + window.Telegram.WebApp.initData
@@ -289,7 +290,7 @@ let allCategories = [];
 
 async function fetchCategories() {
     try {
-        let response = await fetch(`/api/${shopId}/manager/categories?shop_id=${shopId}`, {
+        let response = await fetch(`/api/${botId}/manager/categories?shop_id=${shopId}`, {
             headers: {
                 "Authorization": "tma " + window.Telegram.WebApp.initData
             }
@@ -363,7 +364,7 @@ async function uploadImage(input, statusId, urlId) {
     formData.append('file', file);
     
     try {
-        let response = await fetch(`/api/${shopId}/manager/upload_image?shop_id=${shopId}`, {
+        let response = await fetch(`/api/${botId}/manager/upload_image?shop_id=${shopId}`, {
             method: 'POST',
             headers: {
                 "Authorization": "tma " + window.Telegram.WebApp.initData
@@ -404,7 +405,7 @@ async function submitNewProduct() {
     });
     
     try {
-        let response = await fetch(`/api/${shopId}/manager/products`, {
+        let response = await fetch(`/api/${botId}/manager/products`, {
             method: 'POST',
             headers: {
                 "Authorization": "tma " + window.Telegram.WebApp.initData,
