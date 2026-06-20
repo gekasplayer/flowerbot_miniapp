@@ -25,7 +25,8 @@ async function fetchProducts() {
             tg.showAlert("Помилка завантаження каталогу: " + result.message);
         }
     } catch (e) {
-        tg.showAlert("Не вдалося підключитися до сервера. Перевірте з'єднання.");
+        console.error("Error fetching products:", e);
+        tg.showAlert("Помилка: " + e.message + " | shopId: " + shopId);
     }
 }
 
